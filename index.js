@@ -1,7 +1,7 @@
 module.exports = init;
 
 var wol = require('wake_on_lan');
-var ping = require('net-ping');
+//var ping = require('net-ping');
 var Service = null;
 var Characteristic = null;
 
@@ -48,18 +48,19 @@ WakeOnLan.prototype = {
 	var ipAddress = this.ipAddress;
 	
 	log("requested on state for " + ipAddress);
-	var session = ping.createSession ();
+	callback(null,1);
+	//var session = ping.createSession ();
 
-    session.pingHost (ipAddress, function (error, target) {
-    if (error) {
-        log (ipAddress + ": " + error.toString ());
-		  		callback(null, 0);
-    } else {
-        log (ipAddress + ": Alive");
-		  		callback(null, 0);
-			}
-	});
- },
+    //session.pingHost (ipAddress, function (error, target) {
+    //if (error) {
+    //    log (ipAddress + ": " + error.toString ());
+	//	  		callback(null, 0);
+    //} else {
+    //    log (ipAddress + ": Alive");
+	//	  		callback(null, 0);
+	//		}
+	//});
+  },
 
   getServices: function() {
 
