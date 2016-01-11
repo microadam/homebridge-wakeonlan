@@ -48,6 +48,7 @@ WakeOnLan.prototype = {
       });
 	} else {
       log("ignoring request to turn off " + this.name + "(" + this.macAddress + ")");
+	  callback(true);
 	}	
 
   },
@@ -60,19 +61,20 @@ WakeOnLan.prototype = {
   getPowerState: function(callback) {
 	var log = this.log;
 	var ipAddress = this.ipAddress;
+	var name = this.name;
 	if (ipAddress) {
-		log("requested on state for " + this.name + "(" + ipAddress + ")");
+		log("requested on state for " + name + "(" + ipAddress + ")");
 		this.ping(ipAddress, function(ok) {
 			if (ok) {
-				log(this.name + " is on");
+				log(name + " is on");
 				callback(null,1);
 			} else {
-				log(this.name + " is off");
+				log(name + " is off");
 				callback(null,0);
 			}
 		});
     } else {
-		log("ipAddress not supplied for " + this.name + " so assuming device off");
+		log("ipAddress not supplied for " + name + " so assuming device off");
 		callback(null,0);
     }
   },
