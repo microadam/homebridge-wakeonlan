@@ -36,15 +36,19 @@ WakeOnLan.prototype = {
   setPowerState: function(powerOn, callback) {
     var log = this.log;
 
-    log("sending magic packet to " + this.macAddress);
-    wol.wake(this.macAddress, function(error) {
-      if (error) {
-        log('packet not sent');
-      } else {
-        log('packet sent successfully');
-      }
-      callback(error);
-    });
+	if (powerOn === true) {
+      log("sending magic packet to " + this.name + "(" + this.macAddress + ")");
+      wol.wake(this.macAddress, function(error) {
+        if (error) {
+          log('packet not sent');
+        } else {
+          log('packet sent successfully');
+        } 
+        callback(error);
+      });
+	} else {
+      log("ignoring request to turn off " + this.name + "(" + this.macAddress + ")");
+	}	
 
   },
 
@@ -57,18 +61,18 @@ WakeOnLan.prototype = {
 	var log = this.log;
 	var ipAddress = this.ipAddress;
 	if (ipAddress) {
-		log("requested on state for " + ipAddress);
+		log("requested on state for " + this.name + "(" + ipAddress + ")");
 		this.ping(ipAddress, function(ok) {
 			if (ok) {
-				log(ipAddress + " is on");
+				log(this.name + " is on");
 				callback(null,1);
 			} else {
-				log(ipAddress + " is off");
+				log(this.name + " is off");
 				callback(null,0);
 			}
 		});
     } else {
-		log("ipAddress not supplied so assuming device off");
+		log("ipAddress not supplied for " + this.name + " so assuming device off");
 		callback(null,0);
     }
   },
