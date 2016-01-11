@@ -16,6 +16,6 @@
   },
   "dependencies": {
     "wake_on_lan": "0.0.4",
-	"pingwrap": ">=0.0.1"
+	"net-ping": ">=1.1.12"
   }
 }
