@@ -58,7 +58,7 @@ WakeOnLan.prototype = {
 	var ipAddress = this.ipAddress;
 	if (ipAddress) {
 		log("requested on state for " + ipAddress);
-		ping(ipAddress, function(ok) {
+		this.ping(ipAddress, function(ok) {
 			if (ok) {
 				log(ipAddress + " is on");
 				callback(null,1);
