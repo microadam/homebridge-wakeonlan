@@ -48,7 +48,7 @@ WakeOnLan.prototype = {
       });
 	} else {
       log("ignoring request to turn off " + this.name + "(" + this.macAddress + ")");
-	  callback(true);
+	  callback(false);
 	}	
 
   },
