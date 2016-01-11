@@ -15,7 +15,6 @@
     "homebridge": ">=0.2.0"
   },
   "dependencies": {
-    "wake_on_lan": "0.0.4",
-	"net-ping": ">=1.1.12"
+	  "wake_on_lan": "0.0.4"
   }
 }

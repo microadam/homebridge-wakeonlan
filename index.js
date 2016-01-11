@@ -1,7 +1,7 @@
 module.exports = init;
 
 var wol = require('wake_on_lan');
-//var ping = require('net-ping');
+var exec = require('child_process').exec;
 var Service = null;
 var Characteristic = null;
 
@@ -22,11 +22,21 @@ function WakeOnLan(log, config) {
 }
 
 WakeOnLan.prototype = {
+	
+  ping: function(ipAddress, callback) {
+	  exec("ping -c 1 " + ipAddress, function(error, stdout, stderr) {
+		if (error) {
+			callback(false);
+		} else {
+			callback(true);
+		} 
+	  });
+  },
 
   setPowerState: function(powerOn, callback) {
     var log = this.log;
 
-    log("sending magic packet...");
+    log("sending magic packet to " + this.macAddress);
     wol.wake(this.macAddress, function(error) {
       if (error) {
         log('packet not sent');
@@ -46,20 +56,21 @@ WakeOnLan.prototype = {
   getPowerState: function(callback) {
 	var log = this.log;
 	var ipAddress = this.ipAddress;
-	
-	log("requested on state for " + ipAddress);
-	callback(null,1);
-	//var session = ping.createSession ();
-
-    //session.pingHost (ipAddress, function (error, target) {
-    //if (error) {
-    //    log (ipAddress + ": " + error.toString ());
-	//	  		callback(null, 0);
-    //} else {
-    //    log (ipAddress + ": Alive");
-	//	  		callback(null, 0);
-	//		}
-	//});
+	if (ipAddress) {
+		log("requested on state for " + ipAddress);
+		ping(ipAddress, function(ok) {
+			if (ok) {
+				log(ipAddress + " is on");
+				callback(null,1);
+			} else {
+				log(ipAddress + " is off");
+				callback(null,0);
+			}
+		});
+    } else {
+		log("ipAddress not supplied so assuming device off");
+		callback(null,0);
+    }
   },
 
   getServices: function() {
