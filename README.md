@@ -24,6 +24,6 @@ Configuration sample:
 
 ```
 
-The ipAddress is optional. If supplied then the on status is checked by pinging this IP Address. Pinging is done using ping -c 1 <ipaddress>. This probably only works on unix.
+The ipAddress is optional. If supplied then the on status is checked by pinging this IP Address.
 
 The pingCommand is optional and defaults to 'unix'. It can be 'unix', 'windows' or a specific ping command string. For unix the ping command is 'ping -c 1 -w 1'. For windows it is 'ping -n 1'.
