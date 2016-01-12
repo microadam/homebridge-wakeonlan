@@ -18,6 +18,7 @@ function WakeOnLan(log, config) {
   this.ipAddress = config.ipAddress;
   this.pingCommand = config.pingCommand;
   this.name = config.name;
+  this.firstInvocation = true;
 
   if (!this.macAddress) throw new Error('MacAddress property must be defined');
 }
@@ -28,17 +29,23 @@ WakeOnLan.prototype = {
 	  
 	  // Use an appropriate ping command
 	  // default is unix
-	  // unix or dos are options, as is supplying the command itself
+	  // unix or windows are options, as is supplying the command itself
 	  var pingCommandStr = "";
 	  if (!pingCommand || pingCommand === "unix" || pingCommand === "") {
 		  pingCommandStr = "ping -c 1 -w 1";
-	  } else if (pingCommand === "dos") {
+	  } else if (pingCommand === "windows") {
 		  pingCommandStr = "ping -n 1";
 	  } else {
 		  pingCommandStr = pingCommand;
 	  }
 	  
+	  // Tell us the command being used
+	  if (this.firstInvocation) {
+		  log("ping command is '" + pingCommandStr + "'");
+		  this.firstInvocation = false;
+	  }
 	  
+	  // Check if the machine is available
 	  exec(pingCommandStr + " " + ipAddress, function(error, stdout, stderr) {
 		if (error) {
 			callback(false);
@@ -46,6 +53,7 @@ WakeOnLan.prototype = {
 			callback(true);
 		} 
 	  });
+	  
   },
 
   setPowerState: function(powerOn, callback) {
