@@ -41,7 +41,7 @@ WakeOnLan.prototype = {
 	  
 	  // Tell us the command being used
 	  if (this.firstInvocation) {
-		  log("ping command is '" + pingCommandStr + "'");
+		  this.log("ping command is '" + pingCommandStr + "'");
 		  this.firstInvocation = false;
 	  }
 	  
