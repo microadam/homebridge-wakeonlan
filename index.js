@@ -16,6 +16,7 @@ function WakeOnLan(log, config) {
   this.log = log;
   this.macAddress = config.macAddress;
   this.ipAddress = config.ipAddress;
+  this.pingCommand = config.pingCommand;
   this.name = config.name;
 
   if (!this.macAddress) throw new Error('MacAddress property must be defined');
@@ -23,8 +24,22 @@ function WakeOnLan(log, config) {
 
 WakeOnLan.prototype = {
 	
-  ping: function(ipAddress, callback) {
-	  exec("ping -c 1 " + ipAddress, function(error, stdout, stderr) {
+  ping: function(pingCommand, ipAddress, callback) {
+	  
+	  // Use an appropriate ping command
+	  // default is unix
+	  // unix or dos are options, as is supplying the command itself
+	  var pingCommandStr = "";
+	  if (!pingCommand || pingCommand === "unix" || pingCommand === "") {
+		  pingCommandStr = "ping -c 1 -w 1";
+	  } else if (pingCommand === "dos") {
+		  pingCommandStr = "ping -n 1";
+	  } else {
+		  pingCommandStr = pingCommand;
+	  }
+	  
+	  
+	  exec(pingCommandStr + " " + ipAddress, function(error, stdout, stderr) {
 		if (error) {
 			callback(false);
 		} else {
@@ -61,10 +76,11 @@ WakeOnLan.prototype = {
   getPowerState: function(callback) {
 	var log = this.log;
 	var ipAddress = this.ipAddress;
+	var pingCommand = this.pingCommand;
 	var name = this.name;
-	if (ipAddress) {
+	if (ipAddress && ipAddress !== "") {
 		log("requested on state for " + name + "(" + ipAddress + ")");
-		this.ping(ipAddress, function(ok) {
+		this.ping(pingCommand, ipAddress, function(ok) {
 			if (ok) {
 				log(name + " is on");
 				callback(null,1);
